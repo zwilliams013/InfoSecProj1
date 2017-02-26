@@ -1,4 +1,31 @@
 #include <iostream>
+#include <sstream>
+#include <stdio.h>      /* printf */
+#include <stdlib.h>     /* strtol */
+
+const char* hex_char_to_bin(char c)
+{
+	switch (toupper(c))
+	{
+	case '0': return "0000";
+	case '1': return "0001";
+	case '2': return "0010";
+	case '3': return "0011";
+	case '4': return "0100";
+	case '5': return "0101";
+	case '6': return "0110";
+	case '7': return "0111";
+	case '8': return "1000";
+	case '9': return "1001";
+	case 'A': return "1010";
+	case 'B': return "1011";
+	case 'C': return "1100";
+	case 'D': return "1101";
+	case 'E': return "1110";
+	case 'F': return "1111";
+	}
+}
+
 
 using namespace std;
 
@@ -19,11 +46,32 @@ int main()
 	}
 	*/
 
+	stringstream ss;
 
+	
 	//Get meesage string
 	string num = "5b8ec873bf43a652";
+	//string num = "001";
+	int len = num.length();
+	cout << num.length();
+	int num2Bin[16];
 
-	//Convert to 
+	int value;
+	int i = 0;
+	/*
+	for (i = 0; i < num.length(); i++) {
+		//num2Bin[i] = hex_char_to_bin(num[i]);
+	}*/
+
+	ss << num;
+	ss >> hex >> value;
+
+	
+	cout << value;
+	
+
+
+	//Convert data from hexadecimal to binary 
 	int data[16];
 
 
@@ -43,12 +91,41 @@ int main()
 		cout << data[i] << " ";
 	}
 
-	switch (data[0])
-	{
-	default:
 
-		break;
-	}
+	//Split Message into 2 halves 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -61,15 +138,6 @@ int main()
 
 	};
 
-
-
-
-	static const int Shifts[16] = {
-		1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
-	};
-
-
-
 	static const int PC2[48] = {
 
 		14, 17, 11, 24,  1,  5,  3, 28, 15,  6, 21, 10,
@@ -79,7 +147,9 @@ int main()
 
 	};
 
-
+	static const int Shifts[16] = {
+		1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
+	};
 
 	static const int InitialPerm[64] = {
 
@@ -89,8 +159,7 @@ int main()
 		61, 53, 45, 37, 29, 21, 13,  5, 63, 55, 47, 39, 31, 23, 15,  7
 
 	};
-
-
+	
 	static const int DesExpansion[48] = {
 
 		32,  1,  2,  3,  4,  5,  4,  5,  6,  7,  8,  9,
@@ -143,11 +212,11 @@ int main()
 		{ 2,  1, 14,  7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11 }, },
 
 	};
+
+
 	//Bit shifting schedule
 	static int shiftAmount[] = { 1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1 };
 
-
-	//cout << SBoxContents[0][0][0] << '\n';
 
 	/*
 	for (int i =0; i < 8; i++){
