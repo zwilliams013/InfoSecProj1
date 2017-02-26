@@ -40,7 +40,7 @@ static const int Shifts[16] = {
 
 
 
-static const int Expansion[48] = {
+static const int Expansion [48] = {
 
 	32,  1,  2,  3,  4,  5,  4,  5,  6,  7,  8,  9,
 	8,  9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
@@ -101,10 +101,10 @@ static int shiftAmount[] = { 1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1 };
 
 using namespace std;
 
-int main(){
+int main() {
 
 	int i;
-	
+
 	//Get meesage string
 	string num = "5b8ec873bf43a652";
 
@@ -122,16 +122,16 @@ int main(){
 
 	for (int i = 0; i < binMessage.length(); ++i) {
 
-		
-		if (i % 4 == 0 && i !=0) {
+
+		if (i % 4 == 0 && i != 0) {
 			cout << " ";
 		}
 		cout << binMessage[i];
 
 	}
-	 
+
 	cout << '\n' << binMessage.length() << endl;
-	
+
 
 	//1. Split message into left and right half
 
@@ -141,10 +141,10 @@ int main(){
 	//cout << binMessage.length() / 2;
 
 	//Fill left side
-	for (i = 0; i < binMessage.length()/2; i++) {
+	for (i = 0; i < binMessage.length() / 2; i++) {
 		left += binMessage[i];
 	}
-	
+
 	//Print left side DELETE WHEN DONE								@@@@@@@@@@@@@@@@@@@@@@@@@
 	for (i = 0; i < binMessage.length() / 2; i++) {
 
@@ -155,6 +155,7 @@ int main(){
 	}
 
 	//Fill right side
+	cout << "\n\n Right " << endl;
 	for (i < binMessage.length() / 2; i < binMessage.length(); i++) {
 		right += binMessage[i];
 	}
@@ -173,7 +174,7 @@ int main(){
 
 	//2. Initial Permutation
 	string initialPerm;
-	
+
 	//cout << '\n' << InitialPerm[63] << endl;
 	//cout << "Printing a " << binMessage[InitialPerm[8]] << endl;
 
@@ -202,6 +203,7 @@ int main(){
 		key += b.to_string();
 	}
 	cout << endl;
+	cout << "KEY" << endl;
 	for (i = 0; i < key.length(); i++) {
 		if (i % 4 == 0 && i != 0) {						//used to separate bits into blocks of 4
 			cout << " ";
@@ -213,15 +215,67 @@ int main(){
 
 	//4. Right side expansion
 	string expansion;
-	cout << "\n" << right << endl;
+	//cout << "\n\n Right" << right << endl;
 
-	for (i = 0; i < right.length(); i++) {
-		expansion += right[Expansion[i]];
+
+
+	//Printing right side of message   DELETE WHEN DONE         @@@@@@@@@@@@@@@@@@@@@@@@@@@
+	cout << "\nRight side" << endl;
+	for (i = 0; i < binMessage.length() / 2; i++) {
+
+		if (i % 4 == 0 && i != 0) {
+			cout << " ";
+		}
+		cout << right[i];
+	}
+	//cout << " ";
+
+	for (i = 1; i < (sizeof(Expansion) / sizeof(*Expansion)); ++i) {
+		//expansion += 'a'
+		if (i != 0) {
+			expansion += right[Expansion[i]];															//Check on this 
+
+		}
+		else {
+			expansion += right[Expansion[i-1]];
+		}
+
+		//cout << "expansion at i: " << right[Expansion[i]] << " ";
 	}
 
 
 
-	cout << expansion << endl;
+	cout << "\nexpansion " << (sizeof(Expansion) / sizeof(*Expansion)) << endl;
 
+	for (i = 0; i < (sizeof(Expansion) / sizeof(*Expansion)); i++) {
+		if (i % 4 == 0 && i != 0) {
+			cout << " ";
+		}
+		cout << expansion[i];
+	}
+	cout << "\n\n\n\asdsa" << expansion;
+
+
+
+
+	//5. Xor key with expanded right
+	cout << "\nExpanded Right\n" << expansion << endl;
+	cout << "\n\nKey\n" << key << endl;
+
+	int keyXorRight[48];
+	int a[1] = { 1 };
+	int b[1] = { 0 };
+
+	//cout << a[1] ^ b[1];
+
+	//Xor operation
+	for (i = 0; i < expansion.length(); i++) {
+		if (key[i] != expansion[i])
+			keyXorRight[i] = 1;
+		else {
+			keyXorRight[i] = 0;
+		}
+	}
+	
 
 }
