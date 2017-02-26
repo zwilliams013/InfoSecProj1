@@ -40,7 +40,7 @@ static const int Shifts[16] = {
 
 
 
-static const int DesExpansion[48] = {
+static const int Expansion[48] = {
 
 	32,  1,  2,  3,  4,  5,  4,  5,  6,  7,  8,  9,
 	8,  9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17,
@@ -107,16 +107,11 @@ int main(){
 	
 	//Get meesage string
 	string num = "5b8ec873bf43a652";
-	//string num = "A";
-
-	
-
-
 
 	//Convert data from hexadecimal to binary 
 	string myString = "5b8ec873bf43a652";
 	string binMessage;
-	for (std::size_t i = 0; i < myString.size(); ++i)
+	for (uint64_t i = 0; i < myString.size(); ++i)
 	{
 		bitset<4> b(myString.c_str()[i]);
 		binMessage += b.to_string();
@@ -125,7 +120,7 @@ int main(){
 
 	cout << binMessage << endl;
 
-	for (int i = 0; i < 64; ++i) {
+	for (int i = 0; i < binMessage.length(); ++i) {
 
 		
 		if (i % 4 == 0 && i !=0) {
@@ -178,15 +173,55 @@ int main(){
 
 	//2. Initial Permutation
 	string initialPerm;
+	
+	//cout << '\n' << InitialPerm[63] << endl;
+	//cout << "Printing a " << binMessage[InitialPerm[8]] << endl;
+
 
 	for (i = 0; i < binMessage.length(); i++) {
-		initialPerm += InitialPerm[i];
+		initialPerm += binMessage[InitialPerm[i]];
+	}
+
+	cout << "\n Printing out Initial Permd message:" << endl;
+	for (i = 0; i < binMessage.length(); i++) {
+		if (i % 4 == 0 && i != 0) {						//used to separate bits into blocks of 4
+			cout << " ";
+		}
+		cout << initialPerm[i];
+
 	}
 
 
 
+	//3. Key convert
+	string word = "eb57c5e9bf1d";
+	string key;
+	for (uint64_t i = 0; i < word.size(); ++i)
+	{
+		bitset<4> b(word.c_str()[i]);
+		key += b.to_string();
+	}
+	cout << endl;
+	for (i = 0; i < key.length(); i++) {
+		if (i % 4 == 0 && i != 0) {						//used to separate bits into blocks of 4
+			cout << " ";
+		}
+		cout << key[i];
+
+	}
+
+
+	//4. Right side expansion
+	string expansion;
+	cout << "\n" << right << endl;
+
+	for (i = 0; i < right.length(); i++) {
+		expansion += right[Expansion[i]];
+	}
 
 
 
-	
+	cout << expansion << endl;
+
+
 }
