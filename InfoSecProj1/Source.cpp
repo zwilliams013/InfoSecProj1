@@ -5,7 +5,53 @@
 #include <bitset>
 #include <string>
 #include <vector>
-using namespace std; 
+
+using namespace std;
+
+int stringToInt(string num) {
+	
+	int result = 0;
+	for (int i = 0; i < num.length(); i++) {
+			result *= 2;
+			if (num[i] == '1') {
+				result += 1;
+			}
+	
+	}
+	return result;
+}
+
+void ConvertToBinary(int n) {
+	if (n / 2 != 0) {
+		ConvertToBinary(n / 2);
+	}
+	printf("%d", n % 2);
+}
+
+string dec2bin(unsigned n)
+{
+	string res;
+	/*
+	while (n){
+		res.push_back((n & 1) + '0');
+		n >>= 1;
+	}
+
+	if (res.empty())
+		res = "0";
+	else
+		reverse(res.begin(), res.end());
+		*/
+	for (int i = 0; i < 4; i++) {
+		if (n % 2 == 0)
+			res.append("0");
+		else
+			res.append("1");
+		n /= 2;
+	}
+	reverse(res.begin(), res.end());
+	return res;
+}
 
 string GetBinaryStringFromHexString(string sHex)
 {
@@ -39,7 +85,7 @@ void printString(std::string s) {
 	int i;
 	std::cout << "\nUsed print funct" << std::endl;
 	for (i = 0; i < s.length(); i++) {
-		if (i % 6 == 0 && i != 0) {						//used to separate bits into blocks of 4
+		if (i % 8 == 0 && i != 0) {						//used to separate bits into blocks of 4
 			std::cout << " ";
 		}
 		std::cout << s[i];
@@ -68,7 +114,23 @@ static const int Expansion [48] = {
 
 };
 
+static const int P[32] = {
+	16,	7,	20,	21,	29,	12,	28, 17,
+	1,	15,	23,	26,	5,	18, 31,	10,
+	2,	8,	24,	14,	32,	27,	3,	9,
+	19,	13,	30,	6,	22,	11,	4,	25
+};
 
+static const int IP[64] = {
+	40,	8,	48,	16,	56,	24,	64,	32,
+	39,	7,	47,	15,	55,	23,	63,	31,
+	38,	6,	46,	14,	54,	22,	62,	30,
+	37,	5,	45,	13,	53,	21,	61,	29,
+	36,	4,	44,	12,	52,	20,	60,	28,
+	35,	3,	43,	11,	51,	19,	59,	27,
+	34,	2,	42,	10,	50,	18,	58,	26,
+	33,	1,	41,	9,	49,	17,	57,	25
+};
 
 int SBoxContents[8][4][16] = {
 	{ { 14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7 },
@@ -149,10 +211,9 @@ int main() {
 	string right;
 
 	//2. Initial Permutation
-	string initialPerm = "";
+	string initialPerm = GetBinaryStringFromHexString(num);
 
-	cout << '\n' << InitialPerm[24] << endl;
-	
+/*
 	for (i = 0; i < binMessage.length() ; i++) {
 		initialPerm += binMessage[InitialPerm[i]-1];
 
@@ -166,6 +227,7 @@ int main() {
 		cout << initialPerm[i];
 
 	}
+	*/
 	cout << endl;
 	//Fill left side
 	for (i = 0; i < initialPerm.length() / 2; i++) {
@@ -214,7 +276,7 @@ int main() {
 	cout << "\nKey" << endl;
 	cout << key << endl;
 	for (i = 0; i < key.length(); i++) {
-		if (i % 7 == 0 && i != 0) {						//used to separate bits into blocks of 4
+		if (i % 6 == 0 && i != 0) {						//used to separate bits into blocks of 4
 			cout << " ";
 		}
 		cout << key[i];
@@ -224,7 +286,6 @@ int main() {
 
 	//4. Right side expansion
 	string expansion;
-
 	for (i = 0; i < (sizeof(Expansion) / sizeof(*Expansion)); ++i) {
 		expansion += right[Expansion[i] - 1];															//Works
 	}
@@ -260,26 +321,155 @@ int main() {
 
 	//6. Substitution split xord key into 8 blocks of 6 then use S table to sub with 4 numbers
 	//printString(keyXorRight);
-	string s1;
-	string s2;
-	string s3;
-	string s4;
-	string s5;
-	string s6;
-	string s7;
-	string s8;
-	/*
-	int ss1;
-	cout << s1[5];
-	cout << s1[0];
-	cout << SBoxContents[0][0][0] << endl;
+	string s1, s2, s3, s4,s5,s6,s7, s8;
+	string se1, se2, se3, se4, se5, se6, se7, se8;
+	string sm1, sm2, sm3, sm4, sm5, sm6, sm7, sm8;
 
-	cout << SBoxContents[0][s1[0]][s1[5]];
+	
+
+	for (i = 0; i < 6; i++) {
+		s1 += keyXorRight[i];
+		s2 += keyXorRight[i + 6];
+		s3 += keyXorRight[i + 12];
+		s4 += keyXorRight[i + 18];
+		s5 += keyXorRight[i + 24];
+		s6 += keyXorRight[i + 30];
+		s7 += keyXorRight[i + 36];
+		s8 += keyXorRight[i + 42];
+	}
+	for (i = 0; i < 2; i++) {
+		se1 += s1[i * 5];
+		se2 += s2[i * 5];
+		se3 += s3[i * 5];
+		se4 += s4[i * 5];
+		se5 += s5[i * 5];
+		se6 += s6[i * 5];
+		se7 += s7[i * 5];
+		se8 += s8[i * 5];
+	}
+	for (i = 1; i < 5; i++) {
+		sm1 += s1[i];
+		sm2 += s2[i];
+		sm3 += s3[i];
+		sm4 += s4[i];
+		sm5 += s5[i];
+		sm6 += s6[i];
+		sm7 += s7[i];
+		sm8 += s8[i];
+	}
+
+	cout << endl;
+	/*	
+	cout << "\n" << stringToInt(s1);
+	cout << " " << stringToInt(s2);
+	cout << " " << stringToInt(s3);
+	cout << " " << stringToInt(s4);
+	cout << " " << stringToInt(s5);
+	cout << " " << stringToInt(s6);
+	cout << " " << stringToInt(s7);
+	cout << " " << stringToInt(s8) << endl;*/
+
+	cout << " " << stringToInt(se1);
+	cout << " " << stringToInt(se2);
+	cout << " " << stringToInt(se3);
+	cout << " " << stringToInt(se4);
+	cout << " " << stringToInt(se5);
+	cout << " " << stringToInt(se6);
+	cout << " " << stringToInt(se7);
+	cout << " " << stringToInt(se8);
+	cout << endl;
+
+	cout << " " << stringToInt(sm1);
+	cout << " " << stringToInt(sm2);
+	cout << " " << stringToInt(sm3);
+	cout << " " << stringToInt(sm4);
+	cout << " " << stringToInt(sm5);
+	cout << " " << stringToInt(sm6);
+	cout << " " << stringToInt(sm7);
+	cout << " " << stringToInt(sm8);
+	cout << endl;
+
+	
+
+	//string sub1 = dec2bin(SBoxContents[0][0][12]);
+	string sub1 = dec2bin(SBoxContents[0][stringToInt(se1)][stringToInt(sm1)]);
+	string sub2 = dec2bin(SBoxContents[1][stringToInt(se2)][stringToInt(sm2)]);
+	string sub3 = dec2bin(SBoxContents[2][stringToInt(se3)][stringToInt(sm3)]);
+	string sub4 = dec2bin(SBoxContents[3][stringToInt(se4)][stringToInt(sm4)]);
+	string sub5 = dec2bin(SBoxContents[4][stringToInt(se5)][stringToInt(sm5)]);
+	string sub6 = dec2bin(SBoxContents[5][stringToInt(se6)][stringToInt(sm6)]);
+	string sub7 = dec2bin(SBoxContents[6][stringToInt(se7)][stringToInt(sm7)]);
+	string sub8 = dec2bin(SBoxContents[7][stringToInt(se8)][stringToInt(sm8)]);
+
+	cout << "sube " << sub1 << endl;
+
+	string fullsub = sub1 + sub2 + sub3 +sub4 + sub5 + sub6 + sub7 + sub8;
+
+	printString(fullsub);
+	cout << endl;
 
 
-	ss1 = SBoxContents[1][int(s1[0])][int(s1[5])];
+	// P Permutation
+	string pPerm;
+	for (i = 0; i < fullsub.length(); i++) {
+		pPerm += fullsub[P[i] - 1];
+	}
 
-	*/
-		
+	printString(pPerm);
 
+
+
+	string rswap;
+	//Second Xor operation with left + perm
+	for (i = 0; i < pPerm.length(); i++) {
+		if (left[i] != pPerm[i])
+			rswap += '1';
+		else {
+			rswap += '0';
+		}
+	}
+	cout << "\n\nXor" << endl;
+	cout << rswap << endl;
+	for (i = 0; i < rswap.length(); i++) {
+		if (i % 4 == 0 && i != 0) {
+			cout << " ";
+		}
+		cout << rswap[i];
+	}
+	cout << endl;
+
+	//swap left with right
+	left = right;
+
+	string complete; 
+	//complete =  left + rswap;
+	complete =  rswap + left;
+	cout << "\n" << complete << endl;
+	printString(complete);
+	cout << endl;
+
+	//reverse(complete.begin(), complete.end());
+
+	cout << complete << " before inverse" <<  endl;
+
+
+	
+	//Inverse PErmutation
+	string inverse;
+	for (i = 0; i < complete.length(); i++) {
+		inverse += complete[IP[i] - 1];
+	}
+	cout << inverse << " inverse" << endl;
+	
+	//reverse(inverse.begin(), inverse.end());
+
+
+	string asdf = "1011111101000011101001100101001010000111101010001101000010011100";
+	cout << asdf << " Correct" << endl;
+
+	
+	if (complete == asdf || inverse == asdf) {
+		cout << "\n ********************Youre done" << endl;
+	}
+	
 }
