@@ -4,6 +4,48 @@
 #include <stdlib.h>     /* strtol */
 #include <bitset>
 #include <string>
+#include <vector>
+using namespace std; 
+
+string GetBinaryStringFromHexString(string sHex)
+{
+	string stringReturn = "";
+	for (int i = 0; i < sHex.length(); ++i)
+	{
+		switch (sHex[i])
+		{
+		case '0': stringReturn.append("0000"); break;
+		case '1': stringReturn.append("0001"); break;
+		case '2': stringReturn.append("0010"); break;
+		case '3': stringReturn.append("0011"); break;
+		case '4': stringReturn.append("0100"); break;
+		case '5': stringReturn.append("0101"); break;
+		case '6': stringReturn.append("0110"); break;
+		case '7': stringReturn.append("0111"); break;
+		case '8': stringReturn.append("1000"); break;
+		case '9': stringReturn.append("1001"); break;
+		case 'a': stringReturn.append("1010"); break;
+		case 'b': stringReturn.append("1011"); break;
+		case 'c': stringReturn.append("1100"); break;
+		case 'd': stringReturn.append("1101"); break;
+		case 'e': stringReturn.append("1110"); break;
+		case 'f': stringReturn.append("1111"); break;
+		}
+	}
+	return stringReturn;
+}
+
+void printString(std::string s) {
+	int i;
+	std::cout << "\nUsed print funct" << std::endl;
+	for (i = 0; i < s.length(); i++) {
+		if (i % 6 == 0 && i != 0) {						//used to separate bits into blocks of 4
+			std::cout << " ";
+		}
+		std::cout << s[i];
+	}
+	std::cout << std::endl;
+}
 
 
 static const int InitialPerm[64] = {
@@ -16,29 +58,6 @@ static const int InitialPerm[64] = {
 };
 
 
-static const int PC1[56] = {
-
-	57, 49, 41, 33, 25, 17,  9,  1, 58, 50, 42, 34, 26, 18,
-	10,  2, 59, 51, 43, 35, 27, 19, 11,  3, 60, 52, 44, 36,
-	63, 55, 47, 39, 31, 23, 15,  7, 62, 54, 46, 38, 30, 22,
-	14,  6, 61, 53, 45, 37, 29, 21, 13,  5, 28, 20, 12,  4
-
-};
-
-static const int PC2[48] = {
-
-	14, 17, 11, 24,  1,  5,  3, 28, 15,  6, 21, 10,
-	23, 19, 12,  4, 26,  8, 16,  7, 27, 20, 13,  2,
-	41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48,
-	44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
-
-};
-
-static const int Shifts[16] = {
-	1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
-};
-
-
 
 static const int Expansion [48] = {
 
@@ -48,6 +67,7 @@ static const int Expansion [48] = {
 	24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32,  1
 
 };
+
 
 
 int SBoxContents[8][4][16] = {
@@ -99,30 +119,24 @@ static int shiftAmount[] = { 1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1 };
 
 
 
-using namespace std;
-
 int main() {
 
 	int i;
 
 	//Get meesage string
-	string num = "5b8ec873bf43a652";
-
+	string num = "0123456789abcdef";
+	string bum;
 	//Convert data from hexadecimal to binary 
 	string myString = "5b8ec873bf43a652";
+
 	string binMessage;
-	for (uint64_t i = 0; i < myString.size(); ++i)
-	{
-		bitset<4> b(myString.c_str()[i]);
-		binMessage += b.to_string();
-	}
+	binMessage = GetBinaryStringFromHexString(num);
+	bum = GetBinaryStringFromHexString(num);
 
-
+	cout << "Print message" << endl;
 	cout << binMessage << endl;
 
 	for (int i = 0; i < binMessage.length(); ++i) {
-
-
 		if (i % 4 == 0 && i != 0) {
 			cout << " ";
 		}
@@ -130,152 +144,142 @@ int main() {
 
 	}
 
-	cout << '\n' << binMessage.length() << endl;
-
-
 	//1. Split message into left and right half
-
-	const int space = binMessage.length() / 2;
 	string left;
 	string right;
-	//cout << binMessage.length() / 2;
-
-	//Fill left side
-	for (i = 0; i < binMessage.length() / 2; i++) {
-		left += binMessage[i];
-	}
-
-	//Print left side DELETE WHEN DONE								@@@@@@@@@@@@@@@@@@@@@@@@@
-	for (i = 0; i < binMessage.length() / 2; i++) {
-
-		if (i % 4 == 0 && i != 0) {
-			cout << " ";
-		}
-		cout << left[i];
-	}
-
-	//Fill right side
-	cout << "\n\n Right " << endl;
-	for (i < binMessage.length() / 2; i < binMessage.length(); i++) {
-		right += binMessage[i];
-	}
-
-	//Printing right side of message   DELETE WHEN DONE         @@@@@@@@@@@@@@@@@@@@@@@@@@@
-	cout << " ";
-	for (i = 0; i < binMessage.length() / 2; i++) {
-
-		if (i % 4 == 0 && i != 0) {
-			cout << " ";
-		}
-		cout << right[i];
-	}
-	cout << " ";
-
 
 	//2. Initial Permutation
-	string initialPerm;
+	string initialPerm = "";
 
-	//cout << '\n' << InitialPerm[63] << endl;
-	//cout << "Printing a " << binMessage[InitialPerm[8]] << endl;
+	cout << '\n' << InitialPerm[24] << endl;
+	
+	for (i = 0; i < binMessage.length() ; i++) {
+		initialPerm += binMessage[InitialPerm[i]-1];
 
-
-	for (i = 0; i < binMessage.length(); i++) {
-		initialPerm += binMessage[InitialPerm[i]];
 	}
 
-	cout << "\n Printing out Initial Permd message:" << endl;
-	for (i = 0; i < binMessage.length(); i++) {
+	cout << "\nPrinting out Initial Permd message:" << endl;
+	for (i = 0; i < initialPerm.length(); i++) {
 		if (i % 4 == 0 && i != 0) {						//used to separate bits into blocks of 4
 			cout << " ";
 		}
 		cout << initialPerm[i];
 
 	}
-
-
-
-	//3. Key convert
-	string word = "eb57c5e9bf1d";
-	string key;
-	for (uint64_t i = 0; i < word.size(); ++i)
-	{
-		bitset<4> b(word.c_str()[i]);
-		key += b.to_string();
-	}
 	cout << endl;
-	cout << "KEY" << endl;
-	for (i = 0; i < key.length(); i++) {
-		if (i % 4 == 0 && i != 0) {						//used to separate bits into blocks of 4
+	//Fill left side
+	for (i = 0; i < initialPerm.length() / 2; i++) {
+		left += initialPerm[i];
+	}
+
+	//Print left side DELETE WHEN DONE								@@@@@@@@@@@@@@@@@@@@@@@@@
+	cout << "\nLeft" << endl;
+	for (i = 0; i < left.length(); i++) {
+
+		if (i % 4 == 0 && i != 0) {
 			cout << " ";
 		}
-		cout << key[i];
+		cout << left[i];
+	}
+	cout << endl;
 
+	//Fill right side
+	cout << "\nRight " << endl;
+	for (i = initialPerm.length() / 2; i < initialPerm.length(); i++) {
+		right += initialPerm[i];
 	}
 
-
-	//4. Right side expansion
-	string expansion;
-	//cout << "\n\n Right" << right << endl;
-
-
-
 	//Printing right side of message   DELETE WHEN DONE         @@@@@@@@@@@@@@@@@@@@@@@@@@@
-	cout << "\nRight side" << endl;
-	for (i = 0; i < binMessage.length() / 2; i++) {
+	for (i = 0; i < right.length(); i++) {
 
 		if (i % 4 == 0 && i != 0) {
 			cout << " ";
 		}
 		cout << right[i];
 	}
-	//cout << " ";
+	cout << " ";
+	cout << endl;
 
-	for (i = 1; i < (sizeof(Expansion) / sizeof(*Expansion)); ++i) {
-		//expansion += 'a'
-		if (i != 0) {
-			expansion += right[Expansion[i]];															//Check on this 
+	
+	//3. Key convert
+	string old = "eb57c5e9bf1d";
+	//string word = "F0CCAAF556678F";
+	string word = "1b02effc7072";
+	string key;
+	
+	cout << word;
+	key = GetBinaryStringFromHexString(word);
+	cout << endl;
 
+	cout << "\nKey" << endl;
+	cout << key << endl;
+	for (i = 0; i < key.length(); i++) {
+		if (i % 7 == 0 && i != 0) {						//used to separate bits into blocks of 4
+			cout << " ";
 		}
-		else {
-			expansion += right[Expansion[i-1]];
-		}
+		cout << key[i];
 
-		//cout << "expansion at i: " << right[Expansion[i]] << " ";
+	}
+	cout << '\n' << endl;
+
+	//4. Right side expansion
+	string expansion;
+
+	for (i = 0; i < (sizeof(Expansion) / sizeof(*Expansion)); ++i) {
+		expansion += right[Expansion[i] - 1];															//Works
 	}
 
-
-
-	cout << "\nexpansion " << (sizeof(Expansion) / sizeof(*Expansion)) << endl;
-
+	cout << "\nExpanded Right" << expansion.length() << " \n" << expansion << endl;
 	for (i = 0; i < (sizeof(Expansion) / sizeof(*Expansion)); i++) {
-		if (i % 4 == 0 && i != 0) {
+		if (i % 6 == 0 && i != 0) {
 			cout << " ";
 		}
 		cout << expansion[i];
 	}
-	cout << "\n\n\n\asdsa" << expansion;
-
-
 
 
 	//5. Xor key with expanded right
-	cout << "\nExpanded Right\n" << expansion << endl;
-	cout << "\n\nKey\n" << key << endl;
-
-	int keyXorRight[48];
-	int a[1] = { 1 };
-	int b[1] = { 0 };
-
-	//cout << a[1] ^ b[1];
+	string keyXorRight;
 
 	//Xor operation
 	for (i = 0; i < expansion.length(); i++) {
 		if (key[i] != expansion[i])
-			keyXorRight[i] = 1;
+			keyXorRight += '1';
 		else {
-			keyXorRight[i] = 0;
+			keyXorRight += '0';
 		}
 	}
-	
+	cout << "\n\nXor"<< endl;
+	cout << keyXorRight<< endl;
+	for (i = 0; i < keyXorRight.length(); i++) {
+		if (i % 6 == 0 && i != 0) {
+			cout << " ";
+		}
+		cout << keyXorRight[i];
+	}
+
+	//6. Substitution split xord key into 8 blocks of 6 then use S table to sub with 4 numbers
+	//printString(keyXorRight);
+	string s1;
+	string s2;
+	string s3;
+	string s4;
+	string s5;
+	string s6;
+	string s7;
+	string s8;
+	/*
+	int ss1;
+	cout << s1[5];
+	cout << s1[0];
+	cout << SBoxContents[0][0][0] << endl;
+
+	cout << SBoxContents[0][s1[0]][s1[5]];
+
+
+	ss1 = SBoxContents[1][int(s1[0])][int(s1[5])];
+
+	*/
+		
 
 }
