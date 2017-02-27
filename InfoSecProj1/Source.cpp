@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include <stdio.h>      /* printf */
+#include <stdio.h>     
 #include <string>
 
 using namespace std;
@@ -16,6 +16,82 @@ int stringToInt(string num) {
 	
 	}
 	return result;
+}
+string GetHexFromBin(string sBinary)
+{
+	string hexStr(""), tmp, chr = "0000";
+	int len = sBinary.length() / 4;
+	chr = chr.substr(0, len);
+	sBinary = chr + sBinary;
+	for (int i = 0; i<sBinary.length(); i += 4)
+	{
+		tmp = sBinary.substr(i, 4);
+		 if (!tmp.compare("0001"))
+		{
+			hexStr = hexStr + "1";
+		}
+		else if (!tmp.compare("0010"))
+		{
+			hexStr = hexStr + "2";
+		}
+		else if (!tmp.compare("0011"))
+		{
+			hexStr = hexStr + "3";
+		}
+		else if (!tmp.compare("0100"))
+		{
+			hexStr = hexStr + "4";
+		}
+		else if (!tmp.compare("0101"))
+		{
+			hexStr = hexStr + "5";
+		}
+		else if (!tmp.compare("0110"))
+		{
+			hexStr = hexStr + "6";
+		}
+		else if (!tmp.compare("0111"))
+		{
+			hexStr = hexStr + "7";
+		}
+		else if (!tmp.compare("1000"))
+		{
+			hexStr = hexStr + "8";
+		}
+		else if (!tmp.compare("1001"))
+		{
+			hexStr = hexStr + "9";
+		}
+		else if (!tmp.compare("1010"))
+		{
+			hexStr = hexStr + "A";
+		}
+		else if (!tmp.compare("1011"))
+		{
+			hexStr = hexStr + "B";
+		}
+		else if (!tmp.compare("1100"))
+		{
+			hexStr = hexStr + "C";
+		}
+		else if (!tmp.compare("1101"))
+		{
+			hexStr = hexStr + "D";
+		}
+		else if (!tmp.compare("1110"))
+		{
+			hexStr = hexStr + "E";
+		}
+		else if (!tmp.compare("1111"))
+		{
+			hexStr = hexStr + "F";
+		}
+		else
+		{
+			continue;
+		}
+	}
+	return hexStr;
 }
 
 string dec2bin(unsigned n)
@@ -154,55 +230,40 @@ int main() {
 
 	int i;
 
-	//Get meesage string 5b8ec873bf43a652   0123456789abcdef
-	string num = "5b8ec873bf43a652";
+	//Get meesage string
+	 //"cc017709a25c0bf4";
 	string binMessage;
+	//cout << "Enter 64 bit input: " << endl;
+	binMessage = "cc017709a25c0bf4";
+	//cin >> binMessage;
+	//string binMessage;
 
-	binMessage = GetBinaryStringFromHexString(num);
-
-	cout << "Print message" << endl;
-	printString(binMessage);
-
+	binMessage = GetBinaryStringFromHexString(binMessage);
+	
 	//1. Split message into left and right half
 	string left;
 	string right;
 
-	//2. Initial Permutation
-	string initialPerm;	
-
-	for (i = 0; i < binMessage.length() ; i++) {
-		initialPerm += binMessage[InitialPerm[i]-1];
-	}
-	printString(initialPerm);
-
 	//Fill left side
-	for (i = 0; i < initialPerm.length() / 2; i++) {
-		left += initialPerm[i];
+	for (i = 0; i < binMessage.length() / 2; i++) {
+		left += binMessage[i];
 	}
 
 	//Fill right side
-	cout << "\nRight " << endl;
-	for (i = initialPerm.length() / 2; i < initialPerm.length(); i++) {
-		right += initialPerm[i];
+	for (i = binMessage.length() / 2; i < binMessage.length(); i++) {
+		right += binMessage[i];
 	}
-	printString(right);
 
-	//3. Key convert eb57c5e9bf1d   1b02effc7072
-	string word = "eb57c5e9bf1d";
-	string key;
+	//3. Key convert
+	string key = "72add6db351d";
 
-	cout << "\nKey" << endl;
-	key = GetBinaryStringFromHexString(word);
-	printString(key);
-	cout << endl;
+	key = GetBinaryStringFromHexString(key);
 	
-	//4. Right side expansion
+	//4. Right side expansion using table
 	string expansion;
 	for (i = 0; i < (sizeof(Expansion) / sizeof(*Expansion)); ++i) {
-		expansion += right[Expansion[i] - 1];															//Works
+		expansion += right[Expansion[i] - 1];														
 	}
-	cout << "Expansion" << endl;
-	printString(expansion);
 
 	//5. Xor key with expanded right
 	string keyXorRight;
@@ -215,14 +276,11 @@ int main() {
 			keyXorRight += '0';
 		}
 	}
-	cout << "\n\nXor"<< endl;
 
 	//6. Substitution split xord key into 8 blocks of 6 then use S table to sub with 4 numbers
-	printString(keyXorRight);
 	string s1, s2, s3, s4,s5,s6,s7, s8;
 	string se1, se2, se3, se4, se5, se6, se7, se8;
 	string sm1, sm2, sm3, sm4, sm5, sm6, sm7, sm8;
-
 
 	for (i = 0; i < 6; i++) {
 		s1 += keyXorRight[i];
@@ -234,6 +292,7 @@ int main() {
 		s7 += keyXorRight[i + 36];
 		s8 += keyXorRight[i + 42];
 	}
+	//get end tails of xord output for s table lookup
 	for (i = 0; i < 2; i++) {
 		se1 += s1[i * 5];
 		se2 += s2[i * 5];
@@ -244,6 +303,7 @@ int main() {
 		se7 += s7[i * 5];
 		se8 += s8[i * 5];
 	}
+	//get middle of xord output for s table lookup
 	for (i = 1; i < 5; i++) {
 		sm1 += s1[i];
 		sm2 += s2[i];
@@ -254,57 +314,7 @@ int main() {
 		sm7 += s7[i];
 		sm8 += s8[i];
 	}
-
-	cout << endl;
-
-		
-	cout << "\n" << stringToInt(s1);
-	cout << " " << stringToInt(s2);
-	cout << " " << stringToInt(s3);
-	cout << " " << stringToInt(s4);
-	cout << " " << stringToInt(s5);
-	cout << " " << stringToInt(s6);
-	cout << " " << stringToInt(s7);
-	cout << " " << stringToInt(s8) << endl;
-
-	cout << " " << stringToInt(se1);
-	cout << " " << stringToInt(se2);
-	cout << " " << stringToInt(se3);
-	cout << " " << stringToInt(se4);
-	cout << " " << stringToInt(se5);
-	cout << " " << stringToInt(se6);
-	cout << " " << stringToInt(se7);
-	cout << " " << stringToInt(se8);
-	cout << endl;
-
-	cout << " " << stringToInt(sm1);
-	cout << " " << stringToInt(sm2);
-	cout << " " << stringToInt(sm3);
-	cout << " " << stringToInt(sm4);
-	cout << " " << stringToInt(sm5);
-	cout << " " << stringToInt(sm6);
-	cout << " " << stringToInt(sm7);
-	cout << " " << stringToInt(sm8);
-	cout << endl;
-	
-
-	
-
-	//s boxes
-	cout << "Print s boxes needed " << endl; 
-	/*
-	string sub1 = dec2bin(SBoxContents[0][stringToInt(se1)][stringToInt(sm1)]);
-	string sub2 = dec2bin(SBoxContents[1][stringToInt(se2)][stringToInt(sm2)]);
-	string sub3 = dec2bin(SBoxContents[2][stringToInt(se3)][stringToInt(sm3)]);
-	string sub4 = dec2bin(SBoxContents[3][stringToInt(se4)][stringToInt(sm4)]);
-	string sub5 = dec2bin(SBoxContents[4][stringToInt(se5)][stringToInt(sm5)]);
-	string sub6 = dec2bin(SBoxContents[5][stringToInt(se6)][stringToInt(sm6)]);
-	string sub7 = dec2bin(SBoxContents[6][stringToInt(se7)][stringToInt(sm7)]);
-	string sub8 = dec2bin(SBoxContents[7][stringToInt(se8)][stringToInt(sm8)]);
-	*/
-
-
-	
+	//get s table values
 	int sub1 = (SBoxContents[0][stringToInt(se1)][stringToInt(sm1)]);
 	int sub2 = (SBoxContents[1][stringToInt(se2)][stringToInt(sm2)]);
 	int sub3 = (SBoxContents[2][stringToInt(se3)][stringToInt(sm3)]);
@@ -314,6 +324,7 @@ int main() {
 	int sub7 = (SBoxContents[6][stringToInt(se7)][stringToInt(sm7)]);
 	int sub8 = (SBoxContents[7][stringToInt(se8)][stringToInt(sm8)]);
 	
+	//add binary values of s tables to a string 
 	string fullsub;
 	fullsub += dec2bin(sub1);
 	fullsub += dec2bin(sub2);
@@ -324,23 +335,11 @@ int main() {
 	fullsub += dec2bin(sub7);
 	fullsub += dec2bin(sub8);
 
-	printString(fullsub);
-	
-
-
-	//string fullsub = sub1 + sub2 + sub3 +sub4 + sub5 + sub6 + sub7 + sub8;
-	printString(fullsub);
-	cout << endl;
-
-
 	// P Permutation
 	string pPerm;
 	for (i = 0; i < fullsub.length(); i++) {
 		pPerm += fullsub[P[i] - 1];
 	}
-	cout << "SBox Perm" << endl;
-	printString(pPerm);
-
 
 	string rswap;
 	//Second Xor operation with left + perm
@@ -351,15 +350,6 @@ int main() {
 			rswap += '0';
 		}
 	}
-	cout << "\n\nXor" << endl;
-	cout << rswap << endl;
-	for (i = 0; i < rswap.length(); i++) {
-		if (i % 4 == 0 && i != 0) {
-			cout << " ";
-		}
-		cout << rswap[i];
-	}
-	cout << endl;
 
 	//swap left with right
 	left = right;
@@ -368,43 +358,7 @@ int main() {
 	//join left and right back to 64 bits
 	complete = left + rswap;
 	
-	
-	cout << "\nComplete" << endl;
-	printString(complete);
-	cout << endl;
-	/*
-	string rev = complete;
-	reverse(rev.begin(), rev.end());
-
-	cout<< "Reversed" <<  endl;
-	printString(rev);
-	
-	//Inverse PErmutation
-	string inverse;
-	for (i = 0; i < complete.length(); i++) {
-		inverse += complete[IP[i] - 1];
-	}
-	cout << "\ninverse" << endl;
-	printString(inverse);
-	cout << endl;
-	//reverse(inverse.begin(), inverse.end());
-
-	//reverse Inverse Perm
-	string Rinverse;
-	for (i = 0; i < rev.length(); i++) {
-		Rinverse += rev[IP[i] - 1];
-	}
-	cout << "\nRinverse" << endl;
-	printString(Rinverse);*/
-
-
-	string asdf = "1011111101000011101001100101001010000111101010001101000010011100";
-	cout << "\nCorrect" << endl;
-	printString(asdf);
-
-	
-	if (complete == asdf) {
-		cout << "\n ********************Youre done" << endl;
-	}
-
+	//print output
+	cout << "Complete" << endl;
+	cout << GetHexFromBin(complete);
 }
