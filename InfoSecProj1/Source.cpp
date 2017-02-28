@@ -226,18 +226,15 @@ int SBoxContents[8][4][16] = {
 
 };
 
+
 int main() {
 
 	int i;
 
-	//Get meesage string
-	 //"cc017709a25c0bf4";
 	string binMessage;
-	//cout << "Enter 64 bit input: " << endl;
-	binMessage = "cc017709a25c0bf4";
-	//cin >> binMessage;
-	//string binMessage;
-
+	cout << "Enter 64 bit input: ";
+	cin >> binMessage;
+	
 	binMessage = GetBinaryStringFromHexString(binMessage);
 	
 	//1. Split message into left and right half
@@ -255,8 +252,9 @@ int main() {
 	}
 
 	//3. Key convert
-	string key = "72add6db351d";
-
+	string key;
+	cout << "Enter 48 bit key: ";
+	cin >> key;
 	key = GetBinaryStringFromHexString(key);
 	
 	//4. Right side expansion using table
